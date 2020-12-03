@@ -4,3 +4,4 @@ Bin/
 *.vcxproj.filters
 *.cmake
 CMakeFiles/
+.vscode/

@@ -34,10 +34,12 @@ function(glslang_set_link_args TARGET)
     endif()
 endfunction(glslang_set_link_args)
 
-add_subdirectory(External/glslang/External)
+#add_subdirectory(External/glslang/External)
 
-add_definitions(-DENABLE_OPT=0)
+#add_definitions(-DENABLE_OPT=0)
 
-add_subdirectory(External/glslang/glslang)
-add_subdirectory(External/glslang/OGLCompilersDLL)
-add_subdirectory(External/glslang/SPIRV)
+#add_subdirectory(External/glslang/glslang)
+#add_subdirectory(External/glslang/OGLCompilersDLL)
+#add_subdirectory(External/glslang/SPIRV)
+
+add_subdirectory(External/glslang)

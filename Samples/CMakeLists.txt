@@ -23,7 +23,7 @@
 
 if(WIN32)
     set(PLATFORM_LIB win64) 
-    file(COPY ${VEZ_ROOT_DIR}/Libs/assimp/bin/win64/assimp-vc140-mt.dll DESTINATION ${OUTPUT_DIRECTORY})
+    file(COPY ${VEZ_ROOT_DIR}/Libs/Assimp/bin/win64/assimp-vc140-mt.dll DESTINATION "${VEZ_OUTPUT_DIRECTORY}")
 elseif(APPLE)
     set(PLATFORM_LIB osx64)
 elseif(UNIX)
