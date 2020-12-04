@@ -41,6 +41,7 @@ typedef enum VezMemoryFlagsBits
     VEZ_MEMORY_GPU_TO_CPU = 0x00000004,
     VEZ_MEMORY_DEDICATED_ALLOCATION = 0x00000008,
     VEZ_MEMORY_NO_ALLOCATION = 0x000000010,
+    VEZ_MEMORY_MAPPED = 0x000000020,
 } VezMemoryFlagsBits;
 typedef VkFlags VezMemoryFlags;
 

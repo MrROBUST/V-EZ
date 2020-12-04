@@ -58,7 +58,8 @@ namespace vez
 
     static std::unordered_map<VezMemoryFlags, VmaAllocationCreateFlagBits> memoryFlagsToVmaMemoryCreateFlag = {
         { 0, static_cast<VmaAllocationCreateFlagBits>(0) },
-        { VEZ_MEMORY_DEDICATED_ALLOCATION, VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT }
+        { VEZ_MEMORY_DEDICATED_ALLOCATION, VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT },
+        { VEZ_MEMORY_MAPPED, VMA_ALLOCATION_CREATE_MAPPED_BIT }
     };
 
     VkResult Device::Create(PhysicalDevice* pPhysicalDevice, const VezDeviceCreateInfo* pCreateInfo, Device** ppDevice)
