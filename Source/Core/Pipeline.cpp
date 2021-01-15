@@ -181,6 +181,20 @@ namespace vez
         pipeline->m_stages.resize(1);
         pipeline->m_stages[0].module = pCreateInfo->pStage->module;
         pipeline->m_entryPoints.push_back(shaderModuleEntryPoint);
+        
+
+        // If specialization info exists, copy the entries out.
+        if (pCreateInfo->pStage->pSpecializationInfo)
+        {
+            SpecializationInfo specializationInfo = {};
+            for (auto j = 0U; j < pCreateInfo->pStage->pSpecializationInfo->mapEntryCount; ++j)                
+                specializationInfo.mapEntries.push_back(pCreateInfo->pStage->pSpecializationInfo->pMapEntries[j]);
+
+            specializationInfo.data.resize(pCreateInfo->pStage->pSpecializationInfo->dataSize);
+            memcpy(specializationInfo.data.data(), pCreateInfo->pStage->pSpecializationInfo->pData, pCreateInfo->pStage->pSpecializationInfo->dataSize);
+            
+            pipeline->m_specializationInfo.emplace(shaderModule->GetStage(), std::move(specializationInfo));
+        }
 
         // Merge shader stage resources into pipeline's.
         pipeline->MergeShaderResources(shaderModule->GetResources());
