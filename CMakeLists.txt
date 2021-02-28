@@ -24,6 +24,10 @@
 cmake_minimum_required(VERSION 3.8)
 project(VEZ VERSION 1.1.0 LANGUAGES CXX)
 
+find_package(glslang CONFIG REQUIRED)
+find_package(spirv_cross_core CONFIG REQUIRED)
+find_package(spirv_cross_glsl CONFIG REQUIRED)
+find_package(Threads REQUIRED)
 find_package(Vulkan REQUIRED)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -49,17 +53,6 @@ if(VEZ_OUTPUT_DIRECTORY)
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    
-include(External/SPIRV-Cross.cmake)
-set_target_properties(spirv-cross-core PROPERTIES FOLDER External/SPIRV-Cross)
-set_target_properties(spirv-cross-glsl PROPERTIES FOLDER External/SPIRV-Cross)
-
-include(External/glslang.cmake)
-set_target_properties(glslang PROPERTIES FOLDER External/glslang)
-set_target_properties(OGLCompiler PROPERTIES FOLDER External/glslang)
-set_target_properties(OSDependent PROPERTIES FOLDER External/glslang)
-set_target_properties(SPIRV PROPERTIES FOLDER External/glslang)
-set_target_properties(SPVRemapper PROPERTIES FOLDER External/glslang)
 
 add_subdirectory(Source)
 
