@@ -58,7 +58,8 @@ namespace vez
 
     static std::unordered_map<VezMemoryFlags, VmaAllocationCreateFlagBits> memoryFlagsToVmaMemoryCreateFlag = {
         { 0, static_cast<VmaAllocationCreateFlagBits>(0) },
-        { VEZ_MEMORY_DEDICATED_ALLOCATION, VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT }
+        { VEZ_MEMORY_DEDICATED_ALLOCATION, VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT },
+        { VEZ_MEMORY_MAPPED, VMA_ALLOCATION_CREATE_MAPPED_BIT }
     };
 
     VkResult Device::Create(PhysicalDevice* pPhysicalDevice, const VezDeviceCreateInfo* pCreateInfo, Device** ppDevice)
@@ -551,6 +552,9 @@ namespace vez
             result = vkCreateImage(m_handle, &imageCreateInfo, nullptr, &handle);
         }
 
+        if(result != VK_SUCCESS)
+            return result;
+
         // Determine a "default" image layout based on the usage.  This default image layout will be assumed during command buffer recording.
         // Ordering of conditional statements below determine image layout precedence.
         // Example: When usage is SAMPLED_BIT, that takes precendence over the image being used as a color attachment or for transfer operations.
@@ -567,8 +571,13 @@ namespace vez
         // Create an Image class instance from handle.
         *ppImage = Image::CreateFromHandle(this, pCreateInfo, defaultLayout, handle, allocation);
 
-        // Transition image to a default layout.
-        TransitionImageLayout(*ppImage, imageCreateInfo.initialLayout, defaultLayout);
+        // Don't transition image layout without backing memory.
+        // Transition needs to be done manually at a later time.
+        if ((memFlags & VEZ_MEMORY_NO_ALLOCATION) == 0)
+        {
+            // Transition image to a default layout.
+            TransitionImageLayout(*ppImage, imageCreateInfo.initialLayout, defaultLayout);
+        }
 
         // Return success.
         return VK_SUCCESS;

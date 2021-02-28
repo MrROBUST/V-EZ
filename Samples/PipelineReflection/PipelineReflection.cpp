@@ -55,7 +55,14 @@ void PipelineReflection::Initialize()
 
     for (auto& resource : resources)
     {
-        std::cout << "name=" << resource.name << ", set=" << resource.set << ", binding=" << resource.binding << "\n";
+        std::string access;
+        std::cout << "name=" << resource.name << ", set=" << resource.set << ", binding=" << resource.binding;
+        std::cout << ", access=";
+        if((resource.access & VK_ACCESS_SHADER_READ_BIT) == VK_ACCESS_SHADER_READ_BIT)
+            std::cout << "read";
+        if((resource.access & VK_ACCESS_SHADER_WRITE_BIT) == VK_ACCESS_SHADER_WRITE_BIT)
+            std::cout << "write";
+        std::cout << "\n";
         if (resource.pMembers)
             DisplayMember(1, resource.pMembers);
     }

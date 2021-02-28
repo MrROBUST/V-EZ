@@ -34,6 +34,7 @@ VKAPI_ATTR VkResult VKAPI_CALL vezRemoveImportedVkImage(VkDevice device, VkImage
 
 VKAPI_ATTR VkResult VKAPI_CALL vezGetImageLayout(VkDevice device, VkImage image, VkImageLayout* pImageLayout);
 
+VKAPI_ATTR VkResult VKAPI_CALL vezTransitionImageLayout(VkDevice device, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
 
 #ifdef __cplusplus
 }

@@ -22,7 +22,6 @@
 #include <string>
 #include <fstream>
 #include <glslang/Include/ShHandle.h>
-#include <glslang/Include/revision.h>
 #include <glslang/Public/ShaderLang.h>
 #include <glslang/OSDependent/osinclude.h>
 #include <SPIRV/GlslangToSpv.h>
@@ -162,7 +161,7 @@ namespace vez
         shader.setShiftImageBinding(0);
         shader.setShiftUboBinding(0);
         shader.setShiftSsboBinding(0);
-        shader.setFlattenUniformArrays(false);
+        //shader.setFlattenUniformArrays(false);
         shader.setNoStorageFormat(false);
         if (!shader.parse(&resourceLimits, 100, false, messages))
         {

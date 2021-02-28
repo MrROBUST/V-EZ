@@ -86,43 +86,10 @@ namespace vez
         return pFirstMemberInfo;
     }
 
-    class CustomCompiler : public spirv_cross::CompilerGLSL
-    {
-    public:
-        CustomCompiler(const std::vector<uint32_t>& spirv)
-            : spirv_cross::CompilerGLSL(spirv)
-        {
-
-        }
-
-        VkAccessFlags GetAccessFlags(const spirv_cross::SPIRType& type)
-        {
-            // SPIRV-Cross hack to get the correct readonly and writeonly attributes on ssbos.
-            // This isn't working correctly via Compiler::get_decoration(id, spv::DecorationNonReadable) for example.
-            // So the code below is extracted from private methods within spirv_cross.cpp.
-            // The spirv_cross executable correctly outputs the attributes when converting spirv back to GLSL,
-            // but it's own reflection code does not :-(
-            auto all_members_flag_mask = spirv_cross::Bitset(~0ULL);
-            for (auto i = 0U; i < type.member_types.size(); ++i)
-                all_members_flag_mask.merge_and(get_member_decoration_bitset(type.self, i));
-            
-            auto base_flags = meta[type.self].decoration.decoration_flags;
-            base_flags.merge_or(spirv_cross::Bitset(all_members_flag_mask));
-
-            VkAccessFlags access = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-            if (base_flags.get(spv::DecorationNonReadable))
-                access = VK_ACCESS_SHADER_WRITE_BIT;
-            else if (base_flags.get(spv::DecorationNonWritable))
-                access = VK_ACCESS_SHADER_READ_BIT;
-
-            return access;
-        }
-    };
-
     bool SPIRVReflectResources(const std::vector<uint32_t>& spirv, VkShaderStageFlagBits stage, std::vector<VezPipelineResource>& shaderResources)
     {
         // Parse SPIRV binary.
-        CustomCompiler compiler(spirv);
+        spirv_cross::CompilerGLSL compiler(spirv);
         spirv_cross::CompilerGLSL::Options opts = compiler.get_common_options();
         opts.enable_420pack_extension = true;
         compiler.set_common_options(opts);
@@ -202,7 +169,12 @@ namespace vez
             VezPipelineResource pipelineResource = {};
             pipelineResource.stages = stage;
             pipelineResource.resourceType = VEZ_PIPELINE_RESOURCE_TYPE_STORAGE_BUFFER;
-            pipelineResource.access = compiler.GetAccessFlags(spirType);
+            pipelineResource.access = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            auto buffer_flags = compiler.get_buffer_block_flags(resource.id);
+            if (buffer_flags.get(spv::DecorationNonReadable))
+                pipelineResource.access = VK_ACCESS_SHADER_WRITE_BIT;
+            if (buffer_flags.get(spv::DecorationNonWritable))
+                pipelineResource.access = VK_ACCESS_SHADER_READ_BIT;
             pipelineResource.set = compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
             pipelineResource.binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
             pipelineResource.arraySize = (spirType.array.size() == 0) ? 1 : spirType.array[0];

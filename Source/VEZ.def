@@ -109,3 +109,4 @@ EXPORTS
     vezCmdResolveImage
     vezImportVkImage
     vezGetImageLayout
+    vezTransitionImageLayout

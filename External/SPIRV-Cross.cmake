@@ -55,7 +55,11 @@ spirv_cross_add_library(spirv-cross-core spirv_cross_core STATIC
     External/SPIRV-Cross/spirv_cross.hpp
     External/SPIRV-Cross/spirv_cross.cpp
     External/SPIRV-Cross/spirv_cfg.hpp
-    External/SPIRV-Cross/spirv_cfg.cpp)
+    External/SPIRV-Cross/spirv_cfg.cpp
+    External/SPIRV-Cross/spirv_cross_parsed_ir.hpp
+    External/SPIRV-Cross/spirv_cross_parsed_ir.cpp
+    External/SPIRV-Cross/spirv_parser.hpp
+    External/SPIRV-Cross/spirv_parser.cpp)
 
 spirv_cross_add_library(spirv-cross-glsl spirv_cross_glsl STATIC
     External/SPIRV-Cross/spirv_glsl.cpp

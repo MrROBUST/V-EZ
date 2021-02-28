@@ -397,6 +397,20 @@ namespace vez
         pipelineCreateInfo.stage.module = shaderModule->GetHandle();
         pipelineCreateInfo.stage.pName = pipeline->m_entryPoints[0].c_str();
         pipelineCreateInfo.layout = pipeline->m_pipelineLayout;
+        
+        // Extract specialization constant entry.
+        VkSpecializationInfo specializationInfo = {};
+        auto stage = shaderModule->GetStage();
+        auto it = pipeline->m_specializationInfo.find(stage);
+        if (it != pipeline->m_specializationInfo.end())
+        {
+            specializationInfo.mapEntryCount = static_cast<uint32_t>(it->second.mapEntries.size());
+            specializationInfo.pMapEntries = it->second.mapEntries.data();
+            specializationInfo.dataSize = static_cast<uint32_t>(it->second.data.size());
+            specializationInfo.pData = it->second.data.data();
+            pipelineCreateInfo.stage.pSpecializationInfo = &specializationInfo;
+        }
+
         return vkCreateComputePipelines(m_device->GetHandle(), VK_NULL_HANDLE, 1, &pipelineCreateInfo, nullptr, pHandle);
     }
 

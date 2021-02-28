@@ -77,3 +77,22 @@ VkResult VKAPI_CALL vezGetImageLayout(VkDevice device, VkImage image, VkImageLay
     // Return success.
     return VK_SUCCESS;
 }
+
+VkResult VKAPI_CALL vezTransitionImageLayout(VkDevice device, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout)
+{
+    // Lookup device object handle.
+    auto deviceImpl = vez::ObjectLookup::GetObjectImpl(device);
+    if (!deviceImpl)
+        return VK_INCOMPLETE;
+
+    // Lookup image object handle.
+    auto imageImpl = vez::ObjectLookup::GetObjectImpl(image);
+    if (!imageImpl)
+        return VK_INCOMPLETE;
+    
+    // Transition
+    deviceImpl->TransitionImageLayout(imageImpl, oldLayout, newLayout);
+
+    // Return success.
+    return VK_SUCCESS;
+}
